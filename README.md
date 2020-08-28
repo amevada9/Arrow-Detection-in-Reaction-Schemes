@@ -6,7 +6,7 @@
 ## Which is converted to this:
 ![Image with Contours](/other/Screen-Shot-2020-08-28-at-6.28.46-PM.png?raw=True)
 # Where the Arrow can be isolated and the information returned and stored
-[Image with just Arrow](/other/Screen-Shot-2020-08-28-at-6.29.06-PM.png?raw=True)
+![Image with just Arrow](/other/Screen-Shot-2020-08-28-at-6.29.06-PM.png?raw=True)
 
 ### Updates
 
