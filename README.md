@@ -4,9 +4,9 @@
 
 [Original Reaction Image](https://github.com/amevada9/Arrow-Detection-in-Reaction-Schemes/tree/master/other/CroppedPage10-1.png?raw=True)
 ## Which is converted to this:
-[Image with Contours](https://github.com/amevada9/Arrow-Detection-in-Reaction-Schemes/tree/master/other/Screen Shot 2020-08-28 at 6.28.46 PM.png?raw=True)
+[Image with Contours](https://github.com/amevada9/Arrow-Detection-in-Reaction-Schemes/tree/master/other/Screen-Shot-2020-08-28-at-6.28.46-PM.png?raw=True)
 # Where the Arrow can be isolated and the information returned and stored
-[Image with just Arrow](https://github.com/amevada9/Arrow-Detection-in-Reaction-Schemes/tree/master/other/Screen Shot 2020-08-28 at 6.29.06 PM.png?raw=True)
+[Image with just Arrow](https://github.com/amevada9/Arrow-Detection-in-Reaction-Schemes/tree/master/other/Screen-Shot-2020-08-28-at-6.29.06 PM.png?raw=True)
 
 ### Updates
 
