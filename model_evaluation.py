@@ -6,7 +6,7 @@ from skimage import io
 from skimage import filters
 from skimage.transform import rescale, resize
 from scipy import ndimage as ndi
-import matplotlib.pyplot as plt
+import matplotlib.pyplot as pyplot
 from PIL import Image
 
 import tensorflow as tf
