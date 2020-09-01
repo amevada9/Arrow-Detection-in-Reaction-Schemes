@@ -23,4 +23,10 @@
 #### For the most current code and information, check out the Jupyter Notebook named SciKit_Arrow_Detection.ipynb. That has the latest information and code for the project
 #### Also included in the root directory are scripts relating to image manipulation and augmentation. 
 
-As of Aug 18th, we are seeing CNN models that have a 96% Training accuracy and 75-80% accuracy when dealing with new processed reaction scheme images. However on similar training set we are seeing a lower accuracy (around 65%) showing that the model is currently overfitting the data/ 
+**August 31st:** created new model with Dropout Layers after each Convolutional/Pooling Layer, as well as adding L2 Activity Regularization to the Convolutional Layers to reduce over fitting. Caused top end training accuracy to drop from last push however there was a substanial increase in testing accuracy. As seen in the main Jupyter Notebook, testing accuracy is now over 90%, which puts it withing 3 points of training accuracy in a 10 Epoch training set. The graph below shows the new training and validation set accuracy.
+
+<p align="center">
+  <img width=341 height=68 src="/other/all_conts.png?raw=True">
+</p>
+
+**August 18th:** we are seeing CNN models that have a 96% Training accuracy and 75-80% accuracy when dealing with new processed reaction scheme images. However on similar training set we are seeing a lower accuracy (around 65%) showing that the model is currently overfitting the data/ 
