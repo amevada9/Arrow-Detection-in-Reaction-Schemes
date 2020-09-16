@@ -1,3 +1,11 @@
+'''
+This is a package that are used to deal with the contours that come from Scikit-Image
+Also used to find different centroids in the arrows and pad_contours in an image
+
+Finally, there are methods to segment images and find their contours
+Segment means to binarize, binary clslose, and skeletonize
+'''
+
 import os
 import cv2
 import math 
@@ -31,18 +39,13 @@ from image_utils import binary_close, binarize, binary_floodfill, skeletonize, p
 def show_contours(image, contours, num = -1):
     # Display the image and plot all contours found
     fig, ax = plt.subplots()
-    ax.imshow(image, cmap=plt.cm.gray)
+    ax.imshow(image)
     if num == -1:
         for n, contour in enumerate(contours):
             ax.plot(contour[:, 1], contour[:, 0], linewidth = 3)
     else:
-        for n, contour in enumerate(contours):
-            if n == num:
-                ax.plot(contour[:, 1], contour[:, 0], linewidth = 3)
-
-    ax.axis('image')
-    ax.set_xticks([])
-    ax.set_yticks([])
+        contour = contours[num]
+        ax.plot(contour[:, 1], contour[:, 0], linewidth = 3)
     plt.show()
 
 def arrow_centroid(arrow_contours):
@@ -88,8 +91,7 @@ def pad_image(input_contours, num, size = 500):
     and making a generalized square shape that is easy to work with.
     
     @PACKAGES:
-        - cv2: used for the image manipulation and drawing
-        - NumPy: used for matrix iperations and intializations
+        - Numpy: used for matrix iperations and intializations
     @PARAM:
         - input_contours: points of contours that we want to draw on the 
                           padded image. 
@@ -118,7 +120,7 @@ def pad_image(input_contours, num, size = 500):
         y = int(input_contours[num][i][1] - y_change)
         padded_image[x, y] = 0
     # Draw the adjusted contours on the new image
-    #show_contours(padded_image, input_contours, num = num)
+    # show_contours(padded_image, input_contours, num = num)
     return padded_image
 
 

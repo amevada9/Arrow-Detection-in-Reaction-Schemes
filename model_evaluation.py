@@ -24,68 +24,60 @@ import sklearn
 from sklearn.cluster import KMeans
 from sklearn.model_selection import KFold
 
-# evaluate a model using k-fold cross-validation
 def evaluate_model(dataX, dataY, n_folds=5):
+    '''
+    Function that trains and evaluates a model 
+    '''
     scores, histories = list(), list()
+    # define model
+    model = define_model()
     # prepare cross validation
     kfold = KFold(n_folds, shuffle=True, random_state=1)
     # enumerate splits
+    counter = 1
     for train_ix, test_ix in kfold.split(dataX):
-        # define model
-        model = define_model()
+        print('Beginning Fold: ' + str(counter))
         # select rows for train and test
         trainX, trainY, testX, testY = dataX[train_ix], dataY[train_ix], dataX[test_ix], dataY[test_ix]
         # fit model
-        history = model.fit(trainX, trainY, epochs=5, batch_size=32, validation_data=(testX, testY), verbose=0)
+        history = model.fit(trainX, trainY, epochs = 5, batch_size=32, validation_data=(testX, testY), verbose=1)
         # evaluate model
-        _, acc = model.evaluate(testX, testY, verbose=0)
+        _, acc = model.evaluate(testX, testY, verbose=1)
+        print()
         print('> %.3f' % (acc * 100.0))
+        print()
         # append scores
         scores.append(acc)
         histories.append(history)
-    return scores, histories
+        counter += 1
+    return model, scores, histories
 
-def summarize_diagnostics(histories):
-    for i in range(len(histories)):
-        # plot loss
-        pyplot.subplot(211)
-        pyplot.title('Cross Entropy Loss')
-        pyplot.plot(histories[i].history['loss'], color='blue', label='train')
-        pyplot.plot(histories[i].history['val_loss'], color='orange', label='test')
-        # plot accuracy
-        pyplot.subplot(212)
-        pyplot.title('Classification Accuracy')
-        pyplot.plot(histories[i].history['accuracy'], color='blue', label='train')
-        pyplot.plot(histories[i].history['val_accuracy'], color='orange', label='test')
-    pyplot.show()
+def summarize_diagnostics(history):
+    ''' 
+    Function that takes in the history object that model.fit() throws out,
+    and unpacks it to plot the Cross Entropy Loss and Accuracy of the model
+    Useful to compare the Training and Validation Set
+    '''
+    # plot loss
+    plt.subplot(211)
+    plt.ylim(0, 1)
+    plt.title('Cross Entropy Loss')
+    plt.plot(history.history['loss'], color='blue', label='Training Set')
+    plt.plot(history.history['val_loss'], color='orange', label='Validation Set')
+    plt.xlabel('Epoch')
+    plt.ylabel('Loss Value')
+    plt.legend()
 
-def plot_image(i, predictions_array, true_label, img):
-    predictions_array, true_label, img = predictions_array, true_label[i], img[i]
-    plt.grid(False)
-    plt.xticks([])
-    plt.yticks([])
+    # plot accuracy
+    plt.subplot(212)
+    plt.ylim(0.5, 1.0)
+    plt.title('Classification Accuracy')
+    plt.plot(history.history['accuracy'], color='blue', label='Training Set')
+    plt.plot(history.history['val_accuracy'], color='orange', label='Validation Set')
+    plt.xlabel('Epoch')
+    plt.ylabel('Accuracy')
+    plt.legend()
 
-    plt.imshow(img, cmap=plt.cm.binary)
+    plt.tight_layout()
+    plt.show()
 
-    predicted_label = np.argmax(predictions_array)
-    if predicted_label == true_label:
-        color = 'blue'
-    else:
-        color = 'red'
-
-    plt.xlabel("{} {:2.0f}% ({})".format(class_names[predicted_label],
-                                100*np.max(predictions_array),
-                                class_names[true_label]),
-                                color=color)
-
-def plot_value_array(i, predictions_array, true_label):
-    predictions_array, true_label = predictions_array, true_label[i]
-    plt.grid(False)
-    plt.xticks(range(10))
-    plt.yticks([])
-    thisplot = plt.bar(range(10), predictions_array, color="#777777")
-    plt.ylim([0, 1])
-    predicted_label = np.argmax(predictions_array)
-
-    thisplot[predicted_label].set_color('red')
-    thisplot[true_label].set_color('blue')

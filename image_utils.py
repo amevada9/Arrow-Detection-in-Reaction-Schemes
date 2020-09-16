@@ -22,8 +22,6 @@ from skimage.util import crop as crop_skimage
 from skimage.morphology import binary_closing, disk
 from skimage.morphology import skeletonize as skeletonize_skimage
 
-from contour_utils import split_contours
-
 def convert_colors(image):
     '''
     Function that gives a clear interface to convert colors 
@@ -107,6 +105,19 @@ def skeletonize(fig):
     return skel_fig
 
 def pixel_ratio(img):
+    '''
+    Finds the pixel ratio of white to black, used to decide
+    the kernel size of the binary closing
+    
+    @PACKAGES:
+        - numpy: used to perform the pixel calculations and such for the image
+    
+    @PARAM:
+        - img: a loaded image in Scikit-Image, preferrbably binarized 
+    
+    @RETURN:
+        - ratio: a double of the ratio of white (1) to black (0) pixels
+    '''
     ones = np.count_nonzero(img)
     all_pixels = np.size(img)
     ratio = ones / all_pixels

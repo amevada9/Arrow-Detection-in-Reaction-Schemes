@@ -58,8 +58,8 @@ def arrow_average(arrow_contours):
         y_mean = 0
         # For each list of points in contour
         for j in range(len(arrow_contours[i])):
-                x_mean += arrow_contours[i][j][0]
-                y_mean += arrow_contours[i][j][1]
+                x_mean += arrow_contours[i][j][1]
+                y_mean += arrow_contours[i][j][0]
                 point_count += 1
         x_mean = x_mean / point_count
         y_mean = y_mean / point_count
@@ -92,8 +92,8 @@ def arrow_centroid(arrow_contours):
         for j in range(len(arrow_contours[i])):
                 # For each coordinate 
                     # Element 0 is the x, element 1 is the y value
-                    x_values.append(arrow_contours[i][j][0])
-                    y_values.append(arrow_contours[i][j][1])
+                    x_values.append(arrow_contours[i][j][1])
+                    y_values.append(arrow_contours[i][j][0])
         max_x_val = max(x_values)
         min_x_val = min(x_values)
         average_x = (max_x_val + min_x_val) * 0.5
@@ -129,10 +129,8 @@ def get_orientation(arrow_contours):
                 # For each coordinate 
                 for k in range(len(arrow_contours[i][j])):
                     # Element 0 is the x, element 1 is the y value
-                    if k == 0:
-                        x_values.append(arrow_contours[i][j][k])
-                    else:
-                        y_values.append(arrow_contours[i][j][k])
+                        x_values.append(arrow_contours[i][j][1])
+                        y_values.append(arrow_contours[i][j][0])
         max_x_val = max(x_values)
         min_x_val = min(x_values)
         diff_x = abs(max_x_val - min_x_val)
@@ -151,31 +149,118 @@ def get_orientation(arrow_contours):
             orientations.append('Vertical')
     return orientations
 
-def get_direction(arrow_contours):
+def get_contour_height(contour):
     '''
-    Gets the direction of an arrow given its contour of points. Will be important for getting
-    the products and the reactants of the arrow. Can use the centroid and direction of the 
-    arrow to see whether the compunds on either side are products, reactants or intermediates
-    
+    Function that gets the linear height from min to max y-val of a contour
+    Will be used to differentiate between moleucules and arrows in less 
+    confident idenification
+
+    @PACKAGES:
+        - Scikit-Image: image processing library that allows for the extraction
+                        of contours
     @PARAM:
-        - arrow_contours: the contours of the arrows extracted from find_arrow()
+        - contour: a single contour that is extracted from the image: Should be an 
+                   indexed contour, so do not put list of contours in, put a single 
+                   contour
+                   Ex: get_contour_height(all_contours[2])
     @RETURN:
-        - a dictionary with label of the arrow and the direction in the form of a string
+        - height: Unsigned value of the height of the contour. Difference between max y and min y
     '''
-    directions = {}
-    averages = arrow_average(arrow_contours)
-    centroids = arrow_centroid(arrow_contours)
-    orientations = get_orientation(arrow_contours)
-    for arrow in range(len(orientations)):
-        name = 'Arrow ' + str(arrow + 1)
-        if orientations[arrow] == "Horizontal":
-            if averages[arrow][0] > centroids[arrow][0]:
-                directions[name] = 'Right'
-            else:
-                directions[name] = 'Left'
-        else:
-            if averages[arrow][1] > centroids[arrow][1]:
-                directions[name] = 'Down'
-            else:
-                directions[name] = 'Up'
-    return directions
+    y_vals = []
+    for i, pair in enumerate(contour):
+        y_vals.append(contour[i][0])
+    max_y = max(y_vals)
+    idx_maxY = y_vals.index(max_y)
+    min_y = min(y_vals)
+    idx_minY = y_vals.index(min_y)
+    
+    return abs(max_y - min_y), (idx_minY, idx_maxY)
+
+def get_contour_length(contour):
+    '''
+    Function that gets the linear length from min to max x-val of a contour
+    Will be used to differentiate between different sized contours
+    @PACKAGES:
+        - Scikit-Image: image processing library that allows for the extraction
+                        of contours
+    @PARAM:
+        - contour: a single contour that is extracted from the image: Should be an 
+                   indexed contour, so do not put list of contours in, put a single 
+                   contour
+                   Ex: get_contour_height(all_contours[2])
+    @RETURN:
+        - length: Unsigned value of the height of the contour. Difference between max y and min y
+    '''
+    x_vals = []
+    for i, pair in enumerate(contour):
+        x_vals.append(contour[i][1])
+    max_x = max(x_vals)
+    idx_maxX = x_vals.index(max_x)
+    min_x = min(x_vals)
+    idx_minX = x_vals.index(min_x)
+    
+    return abs(max_x - min_x), (idx_minX, idx_maxX)
+
+def distance(point1, point2):
+    '''
+    Function that can find the distance between 2 points 
+    on the Cartesian coordinate plane. Useful for finding 
+    distances between two points and can be used to establish
+    distance between contour centers
+    
+    @PACKAGES:
+        - math: python math function is used to calculate the magntiude here
+    @PARAM:
+        - point1: a point that has two dimensions (order does not matter)
+        - point1: another point that has two dimensions (order does not matter)
+    @RETURN:
+        - If length of the array is 2, then we get the distance between the points 
+          otherwise a printed error
+    '''
+    
+    x_diff = abs(point1[0] - point2[0])
+    y_diff = abs(point1[1] - point2[1])
+    vector = [x,diff, y_diff]
+    return line_mag(vector)
+
+
+# def get_direction(arrow_contours, image = None):
+#     '''
+#     Gets the direction of an arrow given its contour of points. Will be important for getting
+#     the products and the reactants of the arrow. Can use the centroid and direction of the 
+#     arrow to see whether the compunds on either side are products, reactants or intermediates
+    
+#     @PARAM:
+#         - arrow_contours: the contours of the arrows extracted from find_arrow()
+#     @RETURN:
+#         - a dictionary with label of the arrow and the direction in the form of a string
+#     '''
+#     directions = {}
+# #     averages = arrow_average(arrow_contours)
+#     centroids = arrow_centroid(arrow_contours)
+#     orientations = get_orientation(arrow_contours)
+    
+#     for arrow in range(len(orientations)):
+#         name = 'Arrow ' + str(arrow + 1)
+        
+#         if orientations[arrow] == "Horizontal":
+#             height, extreme_idx = get_contour_height(arrow_contours[arrow])
+                    
+#             x_min = arrow_contours[arrow][extreme_idx[0]][1]
+#             x_max = arrow_contours[arrow][extreme_idx[1]][1]
+            
+#             if (x_min + x_max) * 0.5 >= centroids[arrow][0]:
+#                 directions[name] = 'Right'
+#             else:
+#                 directions[name] = 'Left' 
+                
+#         else:
+#             length, extreme_idx = get_contour_length(arrow_contours[arrow])
+#             y_min = arrow_contours[arrow][extreme_idx[0]][0]
+#             y_max = arrow_contours[arrow][extreme_idx[1]][0]
+            
+#             if (y_min + y_max) * 0.5 >= centroids[arrow][1]:
+#                 directions[name] = 'Up'
+#             else:
+#                 directions[name] = 'Down'
+#     return directions
