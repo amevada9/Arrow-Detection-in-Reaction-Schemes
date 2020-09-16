@@ -1,11 +1,29 @@
+'''
+This module contains functions that will allow for the user to retrain the model
+In it the user can simply load the training and testing sets for the model and
+shape them correctly. 
+
+If retraining is necessary, add padded binarized pictures to the following directories:
+
+Training:
+/training_and_testing/training_sets/new_split_training2/arrows_train/
+/training_and_testing/training_sets/new_split_training2/not_arrows_train/
+
+Testing:
+/training_and_testing/training_sets/new_split_training2/arrows_test/
+/training_and_testing/training_sets/new_split_training2/not_arrows_test/
+
+However this are not used in the normal detection of the arrows. 
+'''
+
 import os
 import numpy as np
 import skimage
 from skimage import io
 
 def load_training_set():  
-    arrow_train = os.path.join(os.getcwd(), 'training_sets','new_split_training2','arrows_train')
-    notArrow_train = os.path.join(os.getcwd(), 'training_sets','new_split_training2','not_arrows_train')
+    arrow_train = os.path.join(os.getcwd(), 'training_and_testing','training_sets','new_split_training2','arrows_train')
+    notArrow_train = os.path.join(os.getcwd(), 'training_and_testing', 'training_sets','new_split_training2','not_arrows_train')
     list_arrows = sorted(os.listdir(arrow_train))[2:]
     list_nots = sorted(os.listdir(notArrow_train))[2:]
 
@@ -48,8 +66,8 @@ def load_training_set():
 
 def load_testing_set():
     # Load the directories with the arrows and not arrows
-    arrow_test = os.path.join(os.getcwd(), 'training_sets','new_split_training2','arrows_test')
-    notArrow_test= os.path.join(os.getcwd(), 'training_sets','new_split_training2','not_arrows_test')
+    arrow_test = os.path.join(os.getcwd(), 'training_and_testing', 'training_sets','new_split_training2','arrows_test')
+    notArrow_test= os.path.join(os.getcwd(), 'training_and_testing', 'training_sets','new_split_training2','not_arrows_test')
     test_arrows = sorted(os.listdir(arrow_test))[1:]
     test_nots = sorted(os.listdir(notArrow_test))[1:]
 

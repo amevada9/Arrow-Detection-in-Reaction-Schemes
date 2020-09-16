@@ -38,10 +38,10 @@ def convert_colors(image):
     return new_image
 
 def convert_greyscale(img):
-    """ 
-    Converts to greyscale if RGB
-    
-    """
+    '''
+    If we find an image that is in RGB/3 Channel
+    we want to convert it to grayscale
+    '''
     # Convert to greyscale if needed
     if img.ndim == 3 and img.shape[-1] in [3, 4]:
         grey_img = rgb2gray(img)
@@ -50,16 +50,16 @@ def convert_greyscale(img):
     return grey_img
 
 def binarize(fig, threshold = 0.85):
-    """ 
+    '''
     Converts image to binary
     RGB images are converted to greyscale using :class:`skimage.color.rgb2gray` before binarizing.
-    
+
     @PARAM:
         - numpy.ndarray img: Input image
         - float|numpy.ndarray threshold: Threshold to use.
     @RETURN:
         - Binary image as a numpy array 
-    """
+    '''
     bin_fig = copy.deepcopy(fig)
     img = bin_fig
 
@@ -75,9 +75,24 @@ def binarize(fig, threshold = 0.85):
     return bin_fig
 
 def binary_close(fig, size = 20):
-    """
+    '''
+    Performs a binary close of the image
     Joins unconnected pixel by dilation and erosion
-    """
+    Used to smoothen image contours and ensure that images are as 
+    dense and high-definition as possible
+    
+    @PACKAGES: 
+        - numpy: used to store images
+        - Scikit-Image: functions used to perform binary close, specifically
+            - disk
+            - pad
+            - binary_closing
+            - crop
+    @PARAM:
+        - fig: figure that we want binary closed needed in numpy array
+    @RETURN:
+        - fig: floodfilled figure
+    '''
     
     selem = disk(size)
 
@@ -87,8 +102,17 @@ def binary_close(fig, size = 20):
     return fig
 
 def binary_floodfill(fig):
-    """ Converts all pixels inside closed contour to 1"""
-    # log.debug('Binary floodfill initiated...')
+    '''
+    Converts all pixels inside closed contour to 1
+    
+    @PACKAGES: 
+        - numpy: used to store images
+        - ndi: functions used to fill
+    @PARAM:
+        - fig: figure that we want floodfilled, needed in numpy array
+    @RETURN:
+        - fig: floodfilled figure
+    '''
     fig = ndi.binary_fill_holes(fig)
     return fig
 
@@ -124,11 +148,20 @@ def pixel_ratio(img):
     return ratio
 
 def skeletonize_area_ratio(image):
+    '''
+    Skeletonizes and image and returns the pixel 
+    ratio for the new image 
+    
+    @PACKAGES:
+        - numpy: used to perform the pixel calculations and such for the image
+        - Scikit-Image: used for image manipulations
+    
+    @PARAM:
+        - image: a loaded image in Scikit-Image, preferrbably binarized 
+    
+    @RETURN:
+        - pixel)ratio: a double of the ratio of white (1) to black (0) pixels of skeltonized image
+    '''
     skel_fig = skeletonize(image)
     return pixel_ratio(skel_fig)
 
-
-def small_to_large_pad(image, size = 275):
-    shape = image.shape
-    image = cv2.copyMakeBorder(image, size - shape[0], size - shape[0], size - shape[1], size - shape[1], cv2.BORDER_CONSTANT, value = (255, 255, 255))
-    return image

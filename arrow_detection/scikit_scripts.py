@@ -3,7 +3,7 @@ This is a package that are used to deal with the contours that come from Scikit-
 Also used to find different centroids in the arrows and pad_contours in an image
 
 Finally, there are methods to segment images and find their contours
-Segment means to binarize, binary clslose, and skeletonize
+Segment means to binarize, binary close, and skeletonize
 '''
 
 import os

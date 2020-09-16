@@ -1,3 +1,10 @@
+'''
+Module used to evaluate and test the newly created model/Neural Networks that are created
+
+Used for evaluation, not pertinant to the arrow detection
+'''
+
+
 import scipy
 import numpy as np
 import pandas as pd
